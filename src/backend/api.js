@@ -2,9 +2,9 @@ import axios from "axios";
 
 const groqApi = import.meta.env.VITE_GROQ_API_KEY;
 
-export async function buscarLugares(cidade, categorias, estilo, periodo) {
+export async function buscarLugares(cidade, categorias, estilo, periodo, faixaPreco) {
   const prompt = `
-Você é um assistente de turismo inteligente especializado na cidade de São Paulo.
+Você é um assistente de turismo inteligente especializado na cidade de ${cidade}).
 
 Sua tarefa é gerar recomendações altamente personalizadas de lugares para visitar, com foco em criar uma experiência otimizada, estratégica e realista para o usuário.
 
@@ -19,6 +19,7 @@ Preferências do usuário:
 - Categorias de interesse: ${categorias}
 - Estilo de viagem: ${estilo} (ex: econômico, luxo, cultural, gastronômico, aventura)
 - Dos dias que irão Ficar: ${periodo}
+- Faixa de preço: ${faixaPreco} 
 Retorne:
 
 Itinerário sugerido (organizado por dia e horário)
