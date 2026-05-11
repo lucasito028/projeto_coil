@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { login, getSession } from "../backend/auth";
 
-export default function Login() {
+export default function Credential() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
