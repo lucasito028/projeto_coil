@@ -3,7 +3,11 @@ import { buscarLugares } from "../backend/api";
 import Calendar from "../components/Calendar";
 import Modal from "../components/Modal";
 import PriceModal from "../components/PriceModal";
+const heightScreen = window.innerHeight;
 
+const pxToVh = (px) => {
+  return `${(window.innerWidth / window.innerHeight) * 96.3}vw`;
+};
 function Home() {
   const [cidade, setCidade] = useState("");
   const [categorias, setCategorias] = useState("");
@@ -220,6 +224,7 @@ function Home() {
 const styles = {
   page: {
     minHeight: "100vh",
+    minWidth: `100vw`,
     background:
       "linear-gradient(135deg, #0f172a, #111827, #1e293b)",
     display: "flex",
@@ -242,7 +247,7 @@ const styles = {
     top: -100,
     left: -100
   },
-
+  
   blur2: {
     position: "absolute",
     width: 500,
@@ -256,9 +261,12 @@ const styles = {
 
   hero: {
     width: "100%",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
-    zIndex: 2
+    alignItems: "center",
+    zIndex: 2,
+    padding: "40px"
   },
 
   card: {
