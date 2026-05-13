@@ -8,6 +8,7 @@ const heightScreen = window.innerHeight;
 const pxToVh = (px) => {
   return `${(window.innerWidth / window.innerHeight) * 96.3}vw`;
 };
+
 function Home() {
   const [cidade, setCidade] = useState("");
   const [categorias, setCategorias] = useState("");
@@ -23,6 +24,29 @@ function Home() {
 
   // CONTROLA A TROCA DE TELA
   const [mostrarResultado, setMostrarResultado] = useState(false);
+
+  
+  const formatTextToHTML = (text) => {
+    text = text.replace(/### (.+)/g, (match, p1) => {
+      return `<h2>${p1}</h2>`;
+    });
+
+    text = text.replace(/\*\*(.+?)\*\*/g, (match, p1) => {
+      return `<strong>${p1}</strong>`;
+    });
+
+    text = text.replace(/^- (.+)/gm, (match, p1) => {
+      return `<li>${p1}</li>`;
+    });
+
+    text = text.replace(/<li/g, "<li>")
+                .replace(/<\/li>/g, "</li>");
+
+    text = text.replace(/\n\n/g, "</p><p>");
+    text = `<p>${text}</p>`;
+
+    return text;
+  };
 
   const buscar = async () => {
     if (!cidade) {
@@ -183,10 +207,7 @@ function Home() {
               </p>
             </div>
           ) : (
-            <div style={styles.resultCard}>
-              <pre style={styles.resultText}>
-                {resultado}
-              </pre>
+            <div style={styles.resultCard} dangerouslySetInnerHTML={{ __html: formatTextToHTML(resultado) }}>
             </div>
           )}
         </div>
@@ -413,13 +434,15 @@ const styles = {
   },
 
   loader: {
-    width: 70,
-    height: 70,
-    border: "6px solid rgba(255,255,255,.15)",
-    borderTop: "6px solid white",
+    width: 82,
+    height: 82,
+    border: "6px solid rgba(255,255,255,.08)",
+    borderTop: "6px solid #7c3aed",
+    borderRight: "6px solid #2563eb",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
-    marginBottom: 30
+    marginBottom: 35,
+    boxShadow: "0 0 40px rgba(124,58,237,.25)"
   },
 
   resultCard: {
