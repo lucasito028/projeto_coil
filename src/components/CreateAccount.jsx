@@ -1,8 +1,11 @@
 import { useState } from "react";
 
+import { createUser } from "../backend/auth";
+
 export default function CreateAccount({
   onChangeScreen
 }) {
+
   const [step, setStep] =
     useState(1);
 
@@ -12,38 +15,112 @@ export default function CreateAccount({
   const [password, setPassword] =
     useState("");
 
-  const [confirmPassword,
-    setConfirmPassword] =
-    useState("");
+  const [
+    confirmPassword,
+    setConfirmPassword
+  ] = useState("");
 
   const [name, setName] =
     useState("");
 
-  const [description,
-    setDescription] =
-    useState("");
+  const [
+    description,
+    setDescription
+  ] = useState("");
 
   const [error, setError] =
     useState("");
 
+  const [loading, setLoading] =
+    useState(false);
+
   const nextStep = () => {
-    if (password !== confirmPassword) {
-      setError("As senhas não coincidem");
+
+    if (
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+
+      setError(
+        "Preencha todos os campos"
+      );
+
+      return;
+    }
+
+    if (
+      password !== confirmPassword
+    ) {
+
+      setError(
+        "As senhas não coincidem"
+      );
+
       return;
     }
 
     setError("");
+
     setStep(2);
   };
 
-  const handleCreate = () => {
-    console.log({
-      email,
-      password,
-      name,
-      description
-    });
-  };
+  const handleCreate =
+    async () => {
+
+      if (!name || !description) {
+
+        setError(
+          "Preencha todos os campos"
+        );
+
+        return;
+      }
+
+      try {
+
+        setLoading(true);
+
+        setError("");
+
+        const response =
+          await createUser(
+            name,
+            email,
+            password,
+            description
+          );
+
+        if (!response.success) {
+
+          setError(
+            response.message
+          );
+
+          return;
+        }
+
+        console.log(
+          "Usuário criado:",
+          response.user
+        );
+
+        alert("Conta criada!");
+
+        onChangeScreen();
+
+      } catch (err) {
+
+        setError(
+          "Erro inesperado"
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+    };
 
   return (
     <div style={styles.card}>
@@ -144,11 +221,22 @@ export default function CreateAccount({
             />
           </div>
 
+          {error && (
+            <p style={styles.error}>
+              {error}
+            </p>
+          )}
+
           <button
             onClick={handleCreate}
             style={styles.mainButton}
+            disabled={loading}
           >
-            Criar conta
+            {
+              loading
+                ? "Criando..."
+                : "Criar conta"
+            }
           </button>
         </>
       )}
@@ -162,7 +250,6 @@ export default function CreateAccount({
     </div>
   );
 }
-
 const styles = {
   card: {
     minWidth: "100%",

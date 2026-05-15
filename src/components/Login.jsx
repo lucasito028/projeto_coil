@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { login } from "../backend/auth";
+
 export default function Login({
   onChangeScreen
 }) {
@@ -9,11 +11,51 @@ export default function Login({
   const [password, setPassword] =
     useState("");
 
-  const handleLogin = () => {
-    console.log({
-      email,
-      password
-    });
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  const handleLogin = async () => {
+
+    if (!email || !password) {
+      setError("Preencha todos os campos");
+      return;
+    }
+
+    try {
+
+      setLoading(true);
+
+      setError("");
+
+      const response =
+        await login(email, password);
+
+      if (!response.success) {
+
+        setError(response.message);
+
+        return;
+      }
+
+      console.log(
+        "Usuário logado:",
+        response.session
+      );
+
+      alert("Login realizado!");
+
+    } catch (err) {
+
+      setError("Erro inesperado");
+
+    } finally {
+
+      setLoading(false);
+
+    }
   };
 
   return (
@@ -49,11 +91,22 @@ export default function Login({
         />
       </div>
 
+      {error && (
+        <p style={styles.error}>
+          {error}
+        </p>
+      )}
+
       <button
         onClick={handleLogin}
         style={styles.mainButton}
+        disabled={loading}
       >
-        Entrar
+        {
+          loading
+            ? "Entrando..."
+            : "Entrar"
+        }
       </button>
 
       <button
