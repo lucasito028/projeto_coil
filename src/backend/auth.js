@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import md5 from "crypto-js/md5";
 
 const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL;
