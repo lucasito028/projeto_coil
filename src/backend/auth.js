@@ -17,7 +17,6 @@ export async function login(
 ) {
 
   try {
-    console.log(supabaseUrl);
     const { data, error } =
       await supabase
         .from("user")
