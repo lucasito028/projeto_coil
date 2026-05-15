@@ -35,7 +35,7 @@ export async function login(
     }
 
     if (
-      data.password !== password
+      data.password !== md5(password).toString()
     ) {
 
       return {
@@ -127,7 +127,7 @@ export async function createUser(
         .insert({
           name,
           email,
-          password,
+          password: md5(password).toString(),
           description,
           created_at:
             new Date().toISOString()
